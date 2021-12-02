@@ -1,9 +1,7 @@
 module Day01 where
 
 readInts :: IO [Int]
-readInts = do
-  c <- getContents
-  return $ map read $ lines c
+readInts = do map read . lines <$> getContents
 
 increasing :: [Int] -> [Int] -> Int
 increasing x1 x2 = length $ filter (uncurry (<)) $ zip x1 x2
@@ -19,4 +17,4 @@ part2 = do
   print $ increasing xs $ drop 3 xs
 
 main :: IO ()
-main = part2
+main = part1
