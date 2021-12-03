@@ -23,10 +23,8 @@ readCommands = do
   let parsedLines = parse commandParser "" <$> lines
   return $ rights parsedLines
 
-numberParser :: Parsec String st Int
-numberParser = do
-  num <- many1 digit
-  return $ read num
+numberParser :: Parser Int
+numberParser = read <$> many1 digit
 
 commandParser :: Parser Command
 commandParser =
