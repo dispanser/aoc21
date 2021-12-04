@@ -1,8 +1,5 @@
 module Day03 where
 
-import Data.Bits (testBit)
-import Control.Monad (sequence)
-
 countAll :: [String] -> [Int]
 countAll xs
     | null (head xs) = []
