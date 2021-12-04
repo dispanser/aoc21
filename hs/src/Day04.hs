@@ -2,7 +2,7 @@
 module Day04 where
 
 import qualified Data.IntMap as M
-import           Data.List (minimumBy)
+import           Data.List (minimumBy, maximumBy)
 import           Data.List.Extra (split, chunksOf)
 import           Data.Function (on)
 import qualified Data.Vector.Unboxed as V
@@ -69,3 +69,4 @@ main = do
      let boards      = createBoard <$> chunksOf 5 (filter (not . null) $ tail ls)
      let boardSolutions = solveBoard numbers <$> boards
      print $ minimumBy (compare `on` atMove) boardSolutions
+     print $ maximumBy (compare `on` atMove) boardSolutions
