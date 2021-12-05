@@ -2,7 +2,6 @@
 
 module Day05 where
 
-import Control.Monad (forM_, join)
 import Text.Parsec (char, many1, digit, string, spaces, parse)
 import Text.Parsec.String (Parser)
 import Data.Either (rights)
@@ -35,8 +34,12 @@ numberParser = read <$> many1 digit
 
 coveredPoints :: Vent -> [Point]
 coveredPoints Vent { .. } =
-  let rows = [row start .. row end]
-      cols = [col start .. col end]
+  let rows = [row start .. row end] -- always singleton or increasing: we're sorting by this
+      cols = case (col start, col end) of -- not sure about the non-exhaustive patter match, can't see it.
+        (cs, ce)
+            | cs < ce  -> [cs .. ce]
+            | cs > ce  -> [cs, cs-1 .. ce]
+            | cs == ce -> [cs]
       steps = max (length rows) (length cols)
   in  uncurry Point <$> take steps (cycle rows `zip` cycle cols)
 
@@ -45,14 +48,14 @@ horizOrVertical Vent { .. } = row start == row end || col start == col end
 
 part1 :: [Vent] -> Int
 part1 vents =
-    let relevantVents = filter horizOrVertical vents
-        points = sort (coveredPoints =<< relevantVents)
+    let points = sort (coveredPoints =<< vents)
     in length $ filter (\ps -> length ps > 1) $ group points
 
 main :: IO ()
 main = do
   ls <- lines <$> getContents
   let vents = rights $ parse readVent "" <$> ls
+  print $ part1 $ filter horizOrVertical vents
   print $ part1 vents
 
 testInput :: [ String ]
