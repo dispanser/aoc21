@@ -31,14 +31,15 @@ mergeGroups fishGroups =
 countFish :: [FishGroup] -> Int
 countFish = sum . (numFish <$>)
 
-part1 :: [FishGroup] -> Int
-part1 fishGroups =
+countAfterDays :: [FishGroup] -> Int -> Int
+countAfterDays fishGroups  days =
   let advance fgs = mergeGroups $ advanceFish =<< fgs
-  in countFish (iterate advance fishGroups !! 80)
+  in countFish (iterate advance fishGroups !! days)
 
 -- TODO:
 main :: IO ()
 main = do
   tokens <- split (== ',') <$> getContents
   let fishgroups = (`FishGroup` 1) . read <$> tokens
-  print $ part1 fishgroups
+  print $ countAfterDays fishgroups 80
+  print $ countAfterDays fishgroups 256
