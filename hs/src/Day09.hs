@@ -11,20 +11,27 @@ data Grid = Grid {
     grid :: V.Vector (V.Vector Int)
 } deriving (Eq, Show)
 
-heightAt :: Grid -> Int -> Int -> Int
-heightAt Grid {..} x y
-    | x < 0 || y < 0            = 10 -- just heigher than on the map
-    | x >= height || y >= width = 10
-    | otherwise = grid ! x ! y
+data Point = Point { row :: Int, col :: Int } deriving (Show, Eq)
 
-isMinPoint :: Grid -> Int -> Int -> Bool
-isMinPoint g x y =
-  let h = heightAt g x y
-  in
-    heightAt g (x-1) y > h &&
-    heightAt g (x+1) y > h &&
-    heightAt g x (y-1) > h &&
-    heightAt g x (y+1) > h
+data Direction = Up | Down | Left | Right
+
+move :: Point -> Direction -> Point
+move p@Point { .. } Up = p { row = row - 1 }
+move p@Point { .. } Down = p { row = row + 1 }
+move p@Point { .. } Left = p { col = col - 1 }
+move p@Point { .. } Right = p { col = col + 1 }
+
+heightAt :: Grid -> Point -> Int
+heightAt Grid {..} Point { .. }
+    | row < 0 || col < 0            = 10 -- just heigher than on the map
+    | row >= height || col >= width = 10
+    | otherwise = grid ! row ! col
+
+
+isMinPoint :: Grid -> Point-> Bool
+isMinPoint g p =
+  let h = heightAt g p
+  in all (> h) $ heightAt g . move p <$> [Left, Right, Up, Down]
 
 parseGrid :: [String] -> Grid
 parseGrid ls = Grid {
@@ -37,10 +44,13 @@ parseGrid ls = Grid {
 -- [1, 2, 3] >>= \i -> Prelude.zip (repeat i) [7, 8, 9]
 part1 :: Grid -> Int
 part1 g@Grid {..} =
-    let coords = [0 .. height-1] >>= \x -> Prelude.zip (repeat x) [0 .. width-1]
-        minPoints  = filter (uncurry (isMinPoint g)) coords
-        cellValues = uncurry (heightAt g) <$> minPoints
+    let coords = uncurry Point <$> ([0 .. height-1] >>= \x -> Prelude.zip (repeat x) [0 .. width-1])
+        minPoints  = filter (isMinPoint g) coords
+        cellValues = heightAt g <$> minPoints
     in sum $ (+1) <$> cellValues
+
+part2 :: Grid -> Int
+part2 g@Grid { .. } = 0
 
 main :: IO ()
 main = do
