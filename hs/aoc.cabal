@@ -17,7 +17,6 @@ license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md
-    ChangeLog.md
 
 source-repository head
   type: git
@@ -32,6 +31,9 @@ library
       Day05
       Day06
       Day07
+      Day08
+      Day09
+      Day10
   other-modules:
       Paths_aoc
   hs-source-dirs:

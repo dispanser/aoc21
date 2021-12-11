@@ -17,3 +17,4 @@ project (aoc21
 	DESCRIPTION "advent of code"
 	LANGUAGES CXX)                      # name of project... 
 add_executable(01 src/day01.cpp)
+add_executable(02 src/day02.cpp)
