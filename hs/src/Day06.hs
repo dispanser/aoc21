@@ -36,7 +36,6 @@ countAfterDays fishGroups  days =
   let advance fgs = mergeGroups $ advanceFish =<< fgs
   in countFish (iterate advance fishGroups !! days)
 
--- TODO:
 main :: IO ()
 main = do
   tokens <- split (== ',') <$> getContents

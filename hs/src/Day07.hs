@@ -1,3 +1,6 @@
+module Day07 where
+
+
 import Data.List (sort, group)
 import Data.List.Extra (split)
 
@@ -22,9 +25,5 @@ main = do
   let numbers = read <$> tokens :: [Int]
   let sumx = sum numbers
   let num  = length numbers
-  print sumx
-  print num
-  print $ maximum numbers
-  print $ minimum numbers
   print $ part1 numbers
   print $ part2brute numbers
