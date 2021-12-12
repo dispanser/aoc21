@@ -111,9 +111,6 @@ main = do
   print $ part2 $ parseBoard exampleBoard
   print $ part2 $ parseBoard inputBoard
 
-
-  -- advanceBoard $ advanceBoard eb
-
 inputBoard, exampleBoard :: [String]
 exampleBoard = [
     "5483143223",
