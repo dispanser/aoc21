@@ -1,4 +1,5 @@
 {-# LANGUAGE LambdaCase #-}
+
 module Day10 where
 
 import Foreign (callocArray0)
