@@ -98,11 +98,18 @@ part1 board =
   let boards = take 101 $ iterate advanceBoard board
   in sum $ map (V.length . V.filter (==0) . cells) boards
 
+part2 :: OctopusBoard -> Int
+part2 board =
+  let boards         = zip [0..] $ iterate advanceBoard board
+  in fst . head $ filter (V.all (==0) . cells . snd) boards
+
 main :: IO ()
 main = do
   -- printBoard $ iterate advanceBoard eb !! 100
   print $ part1 $ parseBoard exampleBoard
   print $ part1 $ parseBoard inputBoard
+  print $ part2 $ parseBoard exampleBoard
+  print $ part2 $ parseBoard inputBoard
 
 
   -- advanceBoard $ advanceBoard eb
