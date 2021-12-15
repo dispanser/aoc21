@@ -1,4 +1,4 @@
-{-# LANGUAGE LambdaCase #-}
+
 
 module Day14 where
 

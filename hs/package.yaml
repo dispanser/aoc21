@@ -24,6 +24,7 @@ dependencies:
 - containers
 - extra
 - vector
+- MemoTrie
 
 library:
   source-dirs: src

@@ -36,12 +36,16 @@ library
       Day10
       Day11
       Day12
+      Day13
+      Day14
+      Day15
   other-modules:
       Paths_aoc
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      MemoTrie
+    , base >=4.7 && <5
     , containers
     , extra
     , parsec
@@ -56,7 +60,8 @@ executable aoc-exe
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      aoc
+      MemoTrie
+    , aoc
     , base >=4.7 && <5
     , containers
     , extra
@@ -73,7 +78,8 @@ test-suite aoc-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      aoc
+      MemoTrie
+    , aoc
     , base >=4.7 && <5
     , containers
     , extra
