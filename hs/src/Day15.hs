@@ -25,24 +25,42 @@ import qualified Debug.Trace as DT
 -- Set (Int, Pos) -> priority queue containing the set of unexplored neighbors
 --                   - lowest value is the next one to explore, as per dijkstra
 
+data SimpleGrid = SimpleGrid {
+    rows  :: Int,
+    cols :: Int,
+    grid :: V.Vector (V.Vector Int)
+} deriving (Eq, Show)
+
+newtype ExtendedGrid = ExtendedGrid { g :: SimpleGrid }
+
 class Grid g where
-  valueAt :: g -> Point -> Int
-  neighbors :: g -> Point -> [Point]
+  valueAt    :: g -> Point -> Int
+  neighbors  :: g -> Point -> [Point]
+  neighbors g p = filter (validPoint g) $ move p <$> [Left, Right, Up, Down]
   validPoint :: g -> Point -> Bool
+  destination :: g -> Point
+
 
 instance Grid SimpleGrid where
   valueAt SimpleGrid { .. } Point { .. } = (grid ! row) ! col
   neighbors g p = filter (validPoint g) $ move p <$> [Left, Right, Up, Down]
   validPoint SimpleGrid { .. } Point { .. } =
     row < rows && row >= 0 && col < cols && col >= 0
+  destination SimpleGrid { .. } = Point { row = rows - 1, col = cols - 1 }
 
-newtype ExtendedGrid = ExtendedGrid SimpleGrid
-
-data SimpleGrid = SimpleGrid {
-    rows  :: Int,
-    cols :: Int,
-    grid :: V.Vector (V.Vector Int)
-} deriving (Eq, Show)
+instance Grid ExtendedGrid where
+  valueAt ExtendedGrid { .. } Point { .. } =
+    let baseRow  = row `mod` rows g
+        baseCol  = col `mod` cols g
+        rowShift = row `div` rows g
+        colShift = col `div` cols g
+        value    = rowShift + colShift + valueAt g Point { row = baseRow, col = baseCol }
+    in if value >= 10
+         then value -9
+         else value
+  validPoint ExtendedGrid { .. } Point { .. } =
+    row < 5 * rows g && row >= 0 && col < 5 * cols g && col >= 0
+  destination ExtendedGrid { .. } = Point { row = 5 * rows g - 1, col = 5 * cols g - 1 }
 
 data Point = Point { row :: Int, col :: Int } deriving (Show, Eq, Ord)
 
@@ -75,7 +93,7 @@ parseGrid ls = SimpleGrid {
   }
     where grid = V.fromList $ V.fromList <$> ((digitToInt <$>) <$> ls)
 
-go :: SimpleGrid -> S.Set Point -> M.Map Int (S.Set Point) -> Int
+go :: Grid a => a -> S.Set Point -> M.Map Int (S.Set Point) -> Int
 go g visited unseen =
   let ((level, points), remaining) = M.deleteFindMin unseen
       reachable = filter (`S.notMember` visited) $
@@ -84,23 +102,22 @@ go g visited unseen =
       newUnseen = M.fromList $ map (\xs -> (fst $ head xs, S.fromList $ snd <$> xs)) $
               groupBy ((==) `on` fst) $ sort $ map (\p -> (level + valueAt g p, p)) reachable
       unseen'   = M.unionWith S.union newUnseen remaining
-  in if Point { row = rows g - 1, col = cols g - 1 } `elem` points
+  in if destination g `elem` points
         then level
         else go g visited' unseen'
 
-part1 :: SimpleGrid -> Int
+part1 :: Grid g => g -> Int
 part1 g = go g S.empty $ M.singleton 0 $ S.singleton Point { row = 0, col = 0}
 
--- expandGrid :: Grid -> Grid
--- expandGrid Grid { .. } = _
-
--- part2 :: Grid -> Int
--- part2 = part1 . expandGrid
+part2 :: SimpleGrid -> Int
+part2 g = part1 $ ExtendedGrid g
 
 main :: IO ()
 main = do
   ls <- lines <$> getContents
-  print . part1 $ parseGrid ls
+  let grid = parseGrid ls
+  print $ part1 grid
+  print $ part2 grid
 
 sampleData :: [String]
 sampleData = [
