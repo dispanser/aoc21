@@ -12,22 +12,6 @@ tests = sequence [
   testSpec "parser tests" testParse ,
   testSpec "part 1 tests" testFindingCubeState ]
 
--- testGroup "Tests" [
-  -- [ testParseToggle
-  -- , testParseNumber
-  -- , testParseRange
-  -- , testParseCommand
-  -- ]
-
--- unitTests = testGroup "Unit tests"
---   [ testCase "List comparison (different length)" $
---       [1, 2, 3] `compare` [1,2] @?= GT
-
---   -- the following test does not hold
---   , testCase "List comparison (same length)" $
---       [1, 2, 3] `compare` [1,2,2] @?= LT
---   ]
-
 testParse = describe "parse input line" $ do
     it "should correctly parse on/off keyword" $ do
         parse parseToggle "" "on" `shouldBe` Right On
@@ -65,11 +49,3 @@ testFindingCubeState = describe "handling part 1" $ do
                  , Command On  (Range 3 3) (Range 17 28) (Range 19 23)
                  ] (3, 20, 20) `shouldBe` False
 
-
-
-test01 :: Spec
-test01 =
-    describe "on some toy example" $ do
-        -- perfect line: y = 2x-1
-        it "should correctly run some test" $ do
-            13 + 4 `shouldBe`17
