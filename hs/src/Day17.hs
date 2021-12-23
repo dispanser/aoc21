@@ -83,6 +83,7 @@ part2 box@Box { .. } =
       allTrajectories = yTrajectories yRange >>= (\ys -> trajectory ys <$> allXs)
   in length $ filter (validTrajectory box) allTrajectories
 
+testBox, prodBox :: Box
 testBox = Box (Bounds 20 30) (Bounds (-10) (-5))
 prodBox = Box (Bounds 207 263) (Bounds (-115) (-63))
 

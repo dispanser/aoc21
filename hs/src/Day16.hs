@@ -82,7 +82,7 @@ readInt bits =
 part1 :: Packet -> Int
 part1 Packet { .. } =
   case contents of
-    Literal n     -> version
+    Literal _     -> version
     SubPackets ps -> version + sum (part1 <$> ps)
 
 part2 :: Packet -> Integer
@@ -105,6 +105,7 @@ main = do
   mapM_ print $ first part2 <$> packets
   -- mapM_ print $ part1 . parsePacket <$> examples
 
+examples :: [String]
 examples = [
     "D2FE28",
     "38006F45291200",

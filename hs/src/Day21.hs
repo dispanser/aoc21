@@ -1,8 +1,6 @@
 {-# LANGUAGE RecordWildCards #-}
 module Day21 where
 
-import           Data.List (groupBy, sort)
-import           Data.Bifunctor (first)
 import qualified Data.MemoTrie as MT
 import qualified Debug.Trace as DT
 

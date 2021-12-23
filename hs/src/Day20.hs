@@ -2,9 +2,7 @@
 
 module Day20 where
 
-import           Control.Monad (mapM_)
 import qualified Data.Vector as V
-import qualified Debug.Trace as DT
 import qualified System.Environment as SE
 
 type PixelMap = V.Vector Bool
@@ -57,7 +55,7 @@ enhanceImage pm image@Image{..} =
         }
 
 getContext' :: Pixel -> [Pixel]
-getContext' (r, c) = reverse $ rows >>= (\r -> repeat r `zip` cols)
+getContext' (r, c) = reverse $ rows >>= (\row -> repeat row `zip` cols)
  where rows = [r-1 .. r+1]
        cols = [c-1 .. c+1]
 

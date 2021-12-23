@@ -1,0 +1,6 @@
+cradle:
+  cabal:
+    - path: "./src"
+      component: "aoc21"
+    - path: "./test"
+      component: "test-aoc21"
