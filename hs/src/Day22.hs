@@ -9,12 +9,12 @@ module Day22 where
 -- for each cube
 -- go from end, search for the first (last) range that contains it
 -- this attempts to use lazyness to speed things up a bit
+import qualified System.Environment as SE
 import qualified Text.Parsec as P
 import           Text.Parsec ((<|>))
 import Text.Parsec.String (Parser)
 import Data.Functor (($>))
 import Data.Either (rights)
-import Data.Maybe  (listToMaybe)
 
 data Range = Range { lower :: Int, upper :: Int } deriving (Eq, Show, Ord)
 
@@ -63,12 +63,21 @@ isCubeOn cs point = case filter (`matches` point) cs of
                       []    -> False
                       (x:_) -> toggle x == On
 
--- parse all the inputs. return in reverse order because later
--- commands "override" older commands
+part1 :: [Command] -> Int
+part1 cs =
+  let range  = [-50 .. 50]
+      points = [(x, y, z) | x <- range, y <- range, z <- range]
+  in length $ filter (isCubeOn cs) points
+
 readInput :: FilePath -> IO [Command]
 readInput fp = do
     ls <- lines <$> readFile fp
     return . reverse . rights $ P.parse parseCommand "" <$> ls
 
+-- main :: IO ()
+-- main = do
+--     [fp] <- SE.getArgs
+--     part1Result <- part1 <$> readInput fp
+--     print part1Result
 
 
